@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOFIA - Project SIOTICS SMKN 1 Jakarta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main-wrapper" class="container-utama">
+        
+        <header id="top-header" class="kepala-halaman">
+            <div class="logo-area">
+                <img src="logo.png" alt="Logo SMKN 1 Jakarta - SIOTICS" id="brand-logo" class="logo-sekolah">
+            </div>
+            <div class="judul-area">
+                <h1 id="judul-projek" class="main-title">S.O.F.I.A</h1>
+                <h2 class="sub-title">SMART OFFICE AND FACILITY INTELLIGENCE ASSISTANT</h2>
+                <div id="status-sistem-header" class="status-indicator">
+                    <span class="label-status">SYSTEM STATUS:</span>
+                    <span id="conn-status-text" class="status-text">OFFLINE</span>
+                </div>
+                <div class="waktu-area">
+                    <span id="uptime-display" class="jam-sistem">00:00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <nav id="navigasi-utama" class="menu-navigasi">
+            <ul class="list-menu">
+                <li class="item-menu"><a href="#edukasi-section" class="link-nav">PENGANTAR</a></li>
+                <li class="item-menu"><a href="#dashboard-area" class="link-nav">MONITORING</a></li>
+                <li class="item-menu"><a href="#tim-dev" class="link-nav">TIM PENGEMBANG</a></li>
+            </ul>
+        </nav>
+
+        <main id="konten-utama" class="isi-halaman">
+            
+            <section id="edukasi-section" class="blok-edukasi">
+                <article class="artikel-intro">
+                    <h3 class="judul-artikel">Apa itu S.O.F.I.A? Sebuah Obrolan Santai.</h3>
+                    <p class="paragraf-isi">
+                        Halo warga Boedoet dan tamu sekalian. Langsung aja ya, kami dari kelompok 5 SIOTICS mau ngenalin projek ambisius yang kami namakan S.O.F.I.A. Jangan bayangin ini robot cewek yang bisa ngajak ngobrol dulu. Sofia di sini singkatan dari Smart Office and Facility Intelligence Assistant. Ribet ya namanya? Intinya gini, kami kasih "nyawa" ke ruangan kelas dan gedung sekolah kita tercinta ini.
+                    </p>
+                    <p class="paragraf-isi">
+                        Kalian tau kan sekolah kita, SMKN 1 Jakarta, itu bukan gedung biasa. Ini gedung cagar budaya peninggalan Belanda. Temboknya tebel, atapnya tinggi, dan punya sejarah panjang. Masalahnya, gedung tua itu musuhnya banyak. Lembab dikit, jamur nongol. Korsleting dikit, resiko kebakaran gede banget karena banyak kayu tua. Makanya, gak cukup kalau cuma dijagain satpam di gerbang depan doang. Gedung ini butuh sistem syaraf sendiri buat ngerasain apa yang terjadi di dalemnya.
+                    </p>
+                    <p class="paragraf-isi">
+                        Di sinilah Sofia masuk. Kami pasang mata dan telinga digital di setiap sudut strategis. Namanya sensor. Sensor ini bakal neriakin data tiap detik ke server (otak utamanya). Kalau suhu kepanasan, dia lapor. Kalau ada gas bocor, dia teriak. Kalau ada gerakan mencurigakan malem-malem pas sekolah kosong, dia bakal ngadu. Jadi, tujuan utama projek ini bukan buat gaya-gayaan biar keliatan canggih doang, tapi buat ngelindungin aset sejarah dan nyawa kita semua yang belajar di sini.
+                    </p>
+                    <p class="paragraf-isi">
+                        Cara bacanya gampang banget. Di bawah nanti ada Dashboard atau papan kontrol. Isinya angka-angka. Kalau warnanya ijo atau biru, berarti aman, santai aja. Tapi kalau angkanya udah berubah jadi merah atau ada tulisan BAHAYA gede banget, nah itu tanda kita harus gerak. Entah itu lari karena kebakaran, atau minimal lapor ke Pak Untung buat benerin keran bocor. Sesimple itu konsepnya. IoT atau Internet of Things itu sebenernya cuma alat bantu biar manusia lebih peka sama lingkungannya. Jangan sampe kita nunggu musibah kejadian baru nyesel.
+                    </p>
+                    <p class="paragraf-isi">
+                        Kami harap dashboard ini bisa bikin kalian melek teknologi sekaligus sadar lingkungan. Jangan cuma liat angkanya gerak-gerak terus bilang "wah keren", tapi pahami dampaknya. Penghematan listrik, keamanan gedung, deteksi dini bencana, itu semua dampaknya real. Oke, cukup basa-basinya. Silakan cek data real-time kondisi sekolah kita di bawah ini.
+                    </p>
+                </article>
+            </section>
+
+            <div id="loading-overlay" class="layar-loading">
+                <div class="loader-box">
+                    <span class="loading-text">MENGHUBUNGKAN KE SARAF PUSAT...</span>
+                    <span id="loading-detail">Menunggu Broker MQTT...</span>
+                </div>
+            </div>
+
+            <section id="dashboard-area" class="grid-dashboard">
+                
+                <div class="row-dashboard top-row">
+                    <div id="card-ai" class="kartu-sensor kartu-lebar">
+                        <div class="header-kartu">
+                            <span class="ikon-kartu">🧠</span>
+                            <span class="nama-sensor">ANALISIS KECERDASAN BUATAN (AI)</span>
+                        </div>
+                        <div class="body-kartu">
+                            <div id="ai-result-box" class="kotak-ai">
+                                <span id="val-ai" class="nilai-ai">MENUNGGU DATA ANALISA...</span>
+                            </div>
+                            <p class="deskripsi-sensor">
+                                Kotak ini adalah otak dari Sofia. Dia gak cuma nampilin angka, tapi mikir. AI bakal baca semua data suhu, gas, dan gerakan, terus ngasih kesimpulan kayak "AMAN", "WASPADA", atau "BAHAYA". Jadi kalian gak perlu pusing baca grafik satu-satu.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row-dashboard sensors-row">
+                    
+                    <div id="card-suhu" class="kartu-sensor">
+                        <div class="header-kartu">
+                            <span class="ikon-kartu">🌡️</span>
+                            <span class="nama-sensor">TEMPERATUR RUANG</span>
+                        </div>
+                        <div class="body-kartu">
+                            <span id="val-temp" class="nilai-utama">0</span>
+                            <span class="satuan">°C</span>
+                            <div class="visual-bar">
+                                <div id="bar-temp" class="bar-isi"></div>
+                            </div>
+                            <p class="deskripsi-sensor">
+                                Suhu ruangan saat ini. Di gedung tua SMKN 1, menjaga suhu itu krusial buat kenyamanan belajar dan keawetan tembok. Kalau di atas 30 derajat, kipas/AC wajib nyala.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="card-lembap" class="kartu-sensor">
+                        <div class="header-kartu">
+                            <span class="ikon-kartu">💧</span>
+                            <span class="nama-sensor">KELEMBAPAN UDARA</span>
+                        </div>
+                        <div class="body-kartu">
+                            <span id="val-hum" class="nilai-utama">0</span>
+                            <span class="satuan">%</span>
+                            <div class="visual-bar">
+                                <div id="bar-hum" class="bar-isi"></div>
+                            </div>
+                            <p class="deskripsi-sensor">
+                                Kelembapan yang terlalu tinggi bikin buku di perpus cepet rusak dan tembok berjamur. Kami mantau ini biar arsip sekolah aman.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="card-gas" class="kartu-sensor">
+                        <div class="header-kartu">
+                            <span class="ikon-kartu">⚠️</span>
+                            <span class="nama-sensor">DETEKSI GAS & ASAP</span>
+                        </div>
+                        <div class="body-kartu">
+                            <span id="val-gas" class="nilai-utama">0</span>
+                            <span class="satuan">PPM</span>
+                            <div class="visual-bar">
+                                <div id="bar-gas" class="bar-isi"></div>
+                            </div>
+                            <span id="status-gas" class="status-badge">AMAN</span>
+                            <p class="deskripsi-sensor">
+                                Sensor hidung digital. Dia nyium bau yang gak bisa kita cium kadang. Kalau angkanya tinggi, bisa jadi ada kebocoran elpiji di kantin (eh lupa, kita ga ada kantin), maksudnya di pantry guru atau konsleting kabel.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="card-motion" class="kartu-sensor">
+                        <div class="header-kartu">
+                            <span class="ikon-kartu">🏃</span>
+                            <span class="nama-sensor">SENSOR GERAK (PIR)</span>
+                        </div>
+                        <div class="body-kartu">
+                            <span id="val-motion" class="nilai-teks">TIDAK ADA</span>
+                            <div id="visual-motion" class="indikator-bulat"></div>
+                            <p class="deskripsi-sensor">
+                                Mata-mata sekolah pas malam hari. Kalau status berubah jadi "TERDETEKSI" pas jam 2 malem, berarti ada tamu tak diundang, atau mungkin kucing numpang lewat.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="card-dist" class="kartu-sensor">
+                        <div class="header-kartu">
+                            <span class="ikon-kartu">📏</span>
+                            <span class="nama-sensor">JARAK OBJEK</span>
+                        </div>
+                        <div class="body-kartu">
+                            <span id="val-dist" class="nilai-utama">0</span>
+                            <span class="satuan">CM</span>
+                            <div class="visual-bar">
+                                <div id="bar-dist" class="bar-isi"></div>
+                            </div>
+                            <p class="deskripsi-sensor">
+                                Mengukur jarak objek di depan alat. Bisa dipake buat deteksi ketinggian air di toren atau antrian orang di gerbang. Fleksibel fungsinya.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="card-flame" class="kartu-sensor sensor-bahaya">
+                        <div class="header-kartu">
+                            <span class="ikon-kartu">🔥</span>
+                            <span class="nama-sensor">SENSOR API</span>
+                        </div>
+                        <div class="body-kartu">
+                            <span id="val-flame" class="nilai-teks">AMAN</span>
+                            <div id="box-flame" class="kotak-status">NORMAL</div>
+                            <p class="deskripsi-sensor">
+                                Ini garda terdepan pelindung Boedoet. Dia ngeliat sinar infrared dari api. Kalau dia teriak, jangan nunggu komando, langsung cek lokasi dan ambil APAR.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="card-water" class="kartu-sensor">
+                        <div class="header-kartu">
+                            <span class="ikon-kartu">🌊</span>
+                            <span class="nama-sensor">DETEKSI BANJIR</span>
+                        </div>
+                        <div class="body-kartu">
+                            <span id="val-water" class="nilai-teks">KERING</span>
+                            <div class="visual-bar">
+                                <div id="bar-water" class="bar-isi"></div>
+                            </div>
+                            <p class="deskripsi-sensor">
+                                Jakarta dan banjir itu bestie. Tapi kita gamau fasilitas informatika di lantai bawah kelelep. Sensor ini kasih tau kalau air mulai masuk ruangan.
+                            </p>
+                        </div>
+                    </div>
+                
+                </div>
+
+                <div class="row-dashboard charts-row">
+                    <div id="container-grafik" class="pembungkus-grafik">
+                        <h4 class="judul-grafik">GRAFIK PERUBAHAN DATA REAL-TIME</h4>
+                        <div class="area-canvas">
+                            <canvas id="grafik-iot"></canvas>
+                        </div>
+                        <p class="info-grafik">
+                            Grafik ini bakal jalan terus selagi web ini kebuka. Kalian bisa liat pola kenaikan suhu pas siang hari dan turunnya pas sore. Pola gas juga bakal keliatan. Data itu valid dan diambil langsung dari server broker Kenzie.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row-dashboard logs-row">
+                    <div id="container-log" class="pembungkus-log">
+                        <h4 class="judul-log">LOG AKTIVITAS SISTEM</h4>
+                        <div id="sys-logs" class="area-terminal">
+                            <div class="baris-log"><span class="waktu-log">[INFO]</span> Sistem antarmuka siap digunakan.</div>
+                            <div class="baris-log"><span class="waktu-log">[INFO]</span> Menunggu paket data masuk...</div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section id="info-tambahan" class="footer-note">
+                <article class="artikel-bawah">
+                    <h3 class="judul-artikel">Catatan Kecil Tim Pengembang</h3>
+                    <p class="paragraf-isi">
+                        Projek S.O.F.I.A ini memang belum sempurna. Kadang koneksi internet sekolah putus nyambung kayak hubungan remaja, kadang sensornya ngadat kena debu. Tapi intinya adalah kemauan buat berinovasi. Di SMKN 1 Jakarta, dengan segala keterbatasan "Gedung Tua"-nya, kita tetep bisa berkarya bikin teknologi masa depan.
+                    </p>
+                    <p class="paragraf-isi">
+                        Semoga dengan dashboard ini, stigma kalau anak teknik cuma bisa pegang obeng itu ilang. Kita bisa koding, kita bisa networking, dan kita bisa bikin solusi nyata. Buat yang mau tanya-tanya gimana cara bikin ginian, cari aja kami, anak-anak eskul SIOTICS di markas belakang. Pintu selalu kebuka (kecuali kalau lagi dikunci Pak Untung).
+                    </p>
+                    <p class="paragraf-isi">
+                        Ingat, teknologi itu cuma alat. Manusia di baliknya yang nentuin itu alat bakal jadi manfaat atau musibah. Gunakan data dari Sofia ini buat kebaikan bersama. Jangan iseng nyalain korek depan sensor api cuma buat tes sirine, berisik bos.
+                    </p>
+                </article>
+            </section>
+        </main>
+
+        <footer id="footer-bawah" class="kaki-halaman">
+            <div class="footer-content">
+                <p class="footer-text">&copy; 2026 KELOMPOK 5 SIOTICS - SMKN 1 JAKARTA.</p>
+                <p class="footer-subtext">Dikembangkan dengan darah, keringat, dan wifi sekolah yang lemot.</p>
+                <div class="team-list">
+                    <span>Developer Utama: isi nama loe</span> | 
+                    <span>Dokumentasi: isi juga nama lo</span> | 
+                    <span>Support: Tuhan YME</span>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Persiapan Script Library (Hanya Link Sumber, Sesuai Request Tidak Ada Code Logic Di Sini) -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        
+        <!-- Script Utama Projek (Nanti Akan Dibuat) -->
+        <script src="script.js"></script>
+    </div>
+</body>
+</html>
