@@ -719,3 +719,80 @@ to { text-shadow: 0 0 20px var(--color-royal-blue); opacity: 1; }
 #bar-gas { background: linear-gradient(to right, #9D50BB, #6E48AA); }
 #bar-dist { background: linear-gradient(to right, #11998e, #38ef7d); }
 #bar-water { background: linear-gradient(to right, #2193b0, #6dd5ed); }
+.kartu-lebar {
+width: 100%;
+grid-column: 1 / -1;
+margin-bottom: 20px;
+}
+#card-system .ikon-kartu { background: linear-gradient(135deg, #4b6cb7, #182848); }
+#card-new-ai .ikon-kartu { background: linear-gradient(135deg, #1A2980, #26D0CE); }
+#card-system:hover { border-color: #4b6cb7; }
+#card-new-ai:hover { border-color: #26D0CE; }
+
+.btn-mode {
+    background: transparent;
+    border: 2px solid var(--color-royal-blue);
+    cursor: pointer;
+    font-family: var(--font-stack);
+}
+
+body.dark-mode {
+    --color-text-main: #e0e0e0;
+    --color-text-sub: #b0b0b0;
+    --glass-surface: rgba(15, 23, 42, 0.85);
+    background-color: #0f172a;
+}
+
+body.dark-mode::before {
+    filter: brightness(0.3) contrast(1.2) hue-rotate(180deg);
+}
+
+body.dark-mode::after {
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(0, 0, 0, 0.9));
+}
+
+body.dark-mode .kepala-halaman,
+body.dark-mode .kartu-sensor,
+body.dark-mode .list-menu,
+body.dark-mode .pembungkus-grafik,
+body.dark-mode .artikel-intro,
+body.dark-mode .artikel-bawah {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    color: #e2e8f0;
+}
+
+body.dark-mode .nilai-utama,
+body.dark-mode .nilai-teks,
+body.dark-mode .judul-artikel {
+    color: #f8fafc;
+}
+
+body.dark-mode .deskripsi-sensor {
+    background: rgba(0, 0, 0, 0.3);
+    color: #cbd5e1;
+}
+
+body.dark-mode .ikon-kartu {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .baris-log {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .btn-mode {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+}
+
+body.dark-mode .link-nav:hover {
+    background: var(--color-gold);
+    color: black;
+}
+
+body.dark-mode #card-suhu .header-kartu::after,
+body.dark-mode #card-lembap .header-kartu::after {
+    opacity: 0.7;
+}   
