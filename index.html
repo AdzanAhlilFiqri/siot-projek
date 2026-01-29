@@ -31,6 +31,7 @@
                 <li class="item-menu"><a href="#edukasi-section" class="link-nav">PENGANTAR</a></li>
                 <li class="item-menu"><a href="#dashboard-area" class="link-nav">MONITORING</a></li>
                 <li class="item-menu"><a href="#tim-dev" class="link-nav">TIM PENGEMBANG</a></li>
+                <li class="item-menu"><button id="theme-btn" class="link-nav btn-mode">🌙 MODE MALAM</button></li>
             </ul>
         </nav>
 
@@ -199,6 +200,42 @@
                     </div>
                 
                 </div>
+
+                <div class="row-dashboard system-status-row">
+    <div id="card-system" class="kartu-sensor kartu-lebar">
+        <div class="header-kartu">
+            <span class="ikon-kartu">🖥️</span>
+            <span class="nama-sensor">SYSTEM STATUS MONITOR</span>
+        </div>
+        <div class="body-kartu">
+            <span id="val-sys-stat" class="nilai-teks" style="color:var(--color-royal-blue);">MENUNGGU DATA PERANGKAT...</span>
+            <div class="visual-bar">
+                <div id="bar-sys" class="bar-isi" style="width: 100%; background: var(--color-royal-blue);"></div>
+            </div>
+            <p class="deskripsi-sensor">
+                Panel ini memantau denyut jantung perangkat ESP32 di lapangan. Jika status menunjukan OFFLINE, harap cek koneksi daya atau wifi pada alat.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row-dashboard ai-row">
+    <div id="card-new-ai" class="kartu-sensor kartu-lebar">
+        <div class="header-kartu">
+            <span class="ikon-kartu">🧠</span>
+            <span class="nama-sensor">A.I ANALYSIS LOG (S.O.F.I.A)</span>
+        </div>
+        <div class="body-kartu">
+            <div class="kotak-ai" style="min-height: 100px; flex-direction:column; align-items:flex-start;">
+                <span style="font-size:0.8rem; opacity:0.7; margin-bottom:5px;">HASIL ANALISA REAL-TIME:</span>
+                <span id="val-new-ai" class="nilai-ai" style="text-align:left;">Sistem sedang mempelajari pola lingkungan sekolah...</span>
+            </div>
+            <p class="deskripsi-sensor">
+                Output langsung dari logika buatan yang memproses korelasi suhu, gas, dan gerakan. Pesan di atas adalah hasil kesimpulan keamanan yang diambil oleh prosesor pusat.
+            </p>
+        </div>
+    </div>
+</div>
 
                 <div class="row-dashboard charts-row">
                     <div id="container-grafik" class="pembungkus-grafik">
