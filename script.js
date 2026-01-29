@@ -1,4 +1,4 @@
-const PROTOTYPE_MODE = true; 
+const PROTOTYPE_MODE = false; 
 
 const CONF_MQTT = {
     url: "wss://h6c5ea94.ala.asia-southeast1.emqxsl.com:8084/mqtt",
@@ -13,6 +13,7 @@ const CONF_MQTT = {
         useSSL: true
     },
     subs: "sofia/#"
+
 };
 
 const UI_CONFIG = {
@@ -43,7 +44,9 @@ const DOMElems = {
         dist: { val: document.getElementById('val-dist'), bar: document.getElementById('bar-dist'), box: document.getElementById('card-dist') },
         flame: { val: document.getElementById('val-flame'), badge: document.getElementById('box-flame'), box: document.getElementById('card-flame') },
         water: { val: document.getElementById('val-water'), bar: document.getElementById('bar-water'), box: document.getElementById('card-water') },
-        ai: { txt: document.getElementById('val-ai'), box: document.getElementById('ai-result-box') }
+        ai: { txt: document.getElementById('val-ai'), box: document.getElementById('ai-result-box') },
+        sysStat: { val: document.getElementById('val-sys-stat'), bar: document.getElementById('bar-sys'), box: document.getElementById('card-system') },
+aiLog: { txt: document.getElementById('val-new-ai'), box: document.getElementById('card-new-ai') }
     }
 };
 
@@ -179,29 +182,25 @@ const Visualizer = {
 const DataProcessor = {
     handleTemp: (msg) => {
         const val = parseFloat(msg).toFixed(1);
-        DOMElems.cards.temp.val.innerText = val;
-        Visualizer.setBar(DOMElems.cards.temp.bar, val, 50);
-        Visualizer.flash(DOMElems.cards.temp.val, UI_CONFIG.colors.temp);
-        
-        CoreState.sensors.temp = val;
-        if(val > 35) LogSystem.add(`ALERT: Suhu Panas ${val}°C`, 'WARN');
+        if (DOMElems.cards.temp && DOMElems.cards.temp.val) {
+            DOMElems.cards.temp.val.innerText = val;
+            Visualizer.setBar(DOMElems.cards.temp.bar, val, 50);
+            CoreState.sensors.temp = val;
+            if(val > 35) LogSystem.add(`ALERT: Suhu Panas ${val}°C`, 'WARN');
+        }
     },
     handleGas: (msg) => {
         const val = parseInt(msg);
         DOMElems.cards.gas.val.innerText = val;
-        Visualizer.setBar(DOMElems.cards.gas.bar, val, 500);
-        Visualizer.flash(DOMElems.cards.gas.val, UI_CONFIG.colors.gas);
-        CoreState.sensors.gas = val;
+        Visualizer.setBar(DOMElems.cards.gas.bar, val, 800);
         
         const badge = DOMElems.cards.gas.badge;
-        if(val > 300) {
+        if(val > 500) {
             badge.innerText = "BAHAYA";
-            badge.style.borderColor = "red";
-            badge.style.color = "red";
+            badge.style.background = "red";
         } else {
             badge.innerText = "AMAN";
-            badge.style.borderColor = "lime";
-            badge.style.color = "lime";
+            badge.style.background = "var(--color-leaf)";
         }
     },
     handleHum: (msg) => {
@@ -215,34 +214,31 @@ const DataProcessor = {
     handleMotion: (msg) => {
         const el = DOMElems.cards.motion;
         if(msg == '1' || msg === 'TERDETEKSI') {
-            el.val.innerText = "TERDETEKSI";
-            el.val.style.color = UI_CONFIG.colors.warn;
-            el.ind.style.background = UI_CONFIG.colors.warn;
+            el.val.innerText = "ADA GERAKAN";
+            el.val.style.color = "red";
+            el.ind.style.background = "red";
             el.ind.style.boxShadow = "0 0 15px red";
-            el.box.style.border = "1px solid red";
         } else {
-            el.val.innerText = "TIDAK ADA";
+            el.val.innerText = "SEPI";
             el.val.style.color = "#ccc";
             el.ind.style.background = "#333";
             el.ind.style.boxShadow = "none";
-            el.box.style.border = "1px solid rgba(255,255,255,0.1)";
         }
     },
     handleFlame: (msg) => {
         const el = DOMElems.cards.flame;
-        if(msg == '1' || msg == 'BAHAYA') {
+        if(msg == '1' || msg == 'BAHAYA' || msg == 'KEBAKARAN') {
             el.val.innerText = "KEBAKARAN!";
             el.val.style.color = "red";
             el.badge.innerText = "EVAKUASI";
             el.badge.style.background = "red";
-            el.badge.style.color = "black";
-            alert("BAHAYA API!");
+            el.box.style.border = "3px solid red";
         } else {
             el.val.innerText = "AMAN";
             el.val.style.color = "lime";
             el.badge.innerText = "NORMAL";
             el.badge.style.background = "transparent";
-            el.badge.style.color = "lime";
+            el.box.style.border = "2px solid white";
         }
     },
     handleWater: (msg) => {
@@ -250,19 +246,36 @@ const DataProcessor = {
         const el = DOMElems.cards.water;
         Visualizer.setBar(el.bar, val, 1024);
         
-        if(val > 600) {
-            el.val.innerText = "BANJIR";
-            el.val.style.color = "red";
-        } else if(val > 300) {
-            el.val.innerText = "BASAH";
+        if(val > 500) {
+            el.val.innerText = "GENANGAN";
             el.val.style.color = "orange";
         } else {
             el.val.innerText = "KERING";
             el.val.style.color = "cyan";
         }
     },
+    handleStatus: (msg) => {
+        const el = DOMElems.cards.sysStat;
+        el.val.innerText = msg.toUpperCase();
+        if(msg.toLowerCase().includes('online') || msg.toLowerCase().includes('ready')) {
+            el.val.style.color = "lime";
+            el.bar.style.background = "lime";
+            el.bar.style.boxShadow = "0 0 15px lime";
+        } else {
+            el.val.style.color = "red";
+            el.bar.style.background = "red";
+            el.bar.style.boxShadow = "0 0 15px red";
+        }
+    },
     handleAI: (msg) => {
-        DOMElems.cards.ai.txt.innerText = msg;
+        const el = DOMElems.cards.aiLog;
+        el.txt.innerText = msg;
+        
+        if(msg.includes('BAHAYA') || msg.includes('WARNING')) {
+            el.txt.style.color = "red";
+        } else {
+            el.txt.style.color = "var(--color-royal-blue)";
+        }
     },
     route: (topic, msg) => {
         const key = topic.split('/').pop().toLowerCase();
@@ -275,6 +288,7 @@ const DataProcessor = {
             case 'motion': DataProcessor.handleMotion(msg); break;
             case 'flame': DataProcessor.handleFlame(msg); break;
             case 'water': DataProcessor.handleWater(msg); break;
+            case 'status': DataProcessor.handleStatus(msg); break;
             case 'ai': DataProcessor.handleAI(msg); break;
         }
         
@@ -402,4 +416,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
     
     new MqttHandler().init();
+
+    const themeBtn = document.getElementById('theme-btn');
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        
+        if (document.body.classList.contains('dark-mode')) {
+            themeBtn.innerText = "☀️ MODE SIANG";
+            themeBtn.style.color = "yellow";
+            themeBtn.style.borderColor = "yellow";
+        } else {
+            themeBtn.innerText = "🌙 MODE MALAM";
+            themeBtn.style.color = "var(--color-royal-blue)";
+            themeBtn.style.borderColor = "var(--color-royal-blue)";
+        }
+    });
 });
