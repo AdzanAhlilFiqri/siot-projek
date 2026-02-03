@@ -1,19 +1,19 @@
 const PROTOTYPE_MODE = false; 
 
 const CONF_MQTT = {
-    url: "wss://h6c5ea94.ala.asia-southeast1.emqxsl.com:8084/mqtt",
+    host: "h6c5ea94.ala.asia-southeast1.emqxsl.com",
+    port: 8084,
+    path: "/mqtt",
     opts: {
-        username: "sofia_esp32",
+        userName: "sofia_esp32",
         password: "sofia123",
-        clean: true,
-        connectTimeout: 5000,
-        reconnectPeriod: 2500,
-        clientId: "WEB_SOFIA_COMMANDER_" + Math.random().toString(16).substr(2, 8),
+        useSSL: true,
+        cleanSession: true,
         keepAliveInterval: 30,
-        useSSL: true
+        timeout: 3,
+        clientId: "WEB_SOFIA_" + Math.random().toString(16).substr(2, 8)
     },
     subs: "sofia/#"
-
 };
 
 const UI_CONFIG = {
@@ -361,17 +361,22 @@ class MqttHandler {
             return;
         }
 
-        const brokerUrl = "broker.emqx.io";
-        const brokerPort = 8083;
+        DOMElems.sys.loadDet.innerText = `Connecting to Sofia Cloud...`;
         
-        DOMElems.sys.loadDet.innerText = `Connecting to ${brokerUrl}...`;
-        
-        this.client = new Paho.MQTT.Client(brokerUrl, Number(brokerPort), "/mqtt", CONF_MQTT.opts.clientId);
+        this.client = new Paho.MQTT.Client(
+            CONF_MQTT.host, 
+            Number(CONF_MQTT.port), 
+            CONF_MQTT.path, 
+            CONF_MQTT.opts.clientId
+        );
         
         this.client.onConnectionLost = (resp) => {
-            LogSystem.add("CONNECTION LOST: " + resp.errorMessage, "CRIT");
-            DOMElems.sys.connText.innerText = "OFFLINE";
-            setTimeout(() => this.connect(), 2000);
+            if (resp.errorCode !== 0) {
+                LogSystem.add("PUTUS: " + resp.errorMessage, "CRIT");
+            }
+            DOMElems.sys.connText.innerText = "RECONNECTING";
+            DOMElems.sys.connText.style.color = "orange";
+            setTimeout(() => this.connect(), 3000);
         };
         
         this.client.onMessageArrived = (msg) => {
@@ -384,22 +389,27 @@ class MqttHandler {
     connect() {
         try {
             this.client.connect({
+                userName: CONF_MQTT.opts.userName,
+                password: CONF_MQTT.opts.password,
+                useSSL: CONF_MQTT.opts.useSSL,
+                cleanSession: CONF_MQTT.opts.cleanSession,
+                keepAliveInterval: CONF_MQTT.opts.keepAliveInterval,
                 onSuccess: () => {
                     DOMElems.sys.loader.style.opacity = '0';
                     DOMElems.sys.loader.style.pointerEvents = 'none';
-                    DOMElems.sys.connText.innerText = "CONNECTED";
+                    DOMElems.sys.connText.innerText = "ONLINE (CLOUD)";
                     DOMElems.sys.connText.style.color = "lime";
-                    LogSystem.add("BERHASIL TERHUBUNG KE SERVER SOFIA", "INFO");
+                    DOMElems.sys.statusBadge.style.borderColor = "lime";
+                    LogSystem.add("TERHUBUNG KE SERVER SOFIA", "INFO");
                     this.client.subscribe(CONF_MQTT.subs);
                 },
                 onFailure: (e) => {
-                    LogSystem.add("Gagal Konek, retrying...", "WARN");
-                    setTimeout(() => this.connect(), 4000);
-                },
-                keepAliveInterval: 30
+                    LogSystem.add("GAGAL: " + e.errorMessage, "WARN");
+                    setTimeout(() => this.connect(), 5000);
+                }
             });
         } catch (e) {
-            console.log("MQTT Error ignored in strict mode");
+            console.log("MQTT Error ignored");
         }
     }
 }
@@ -431,4 +441,23 @@ document.addEventListener('DOMContentLoaded', () => {
             themeBtn.style.borderColor = "var(--color-royal-blue)";
         }
     });
+
+    // LOGIKA SIDEBAR MOBILE
+    const menuToggle = document.getElementById('mobile-menu');
+    const navList = document.querySelector('.list-menu');
+
+    if(menuToggle && navList) {
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('is-active');
+            navList.classList.toggle('active');
+        });
+        
+        // Klik link otomatis tutup menu
+        document.querySelectorAll('.link-nav').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('is-active');
+                navList.classList.remove('active');
+            });
+        });
+    }
 });
