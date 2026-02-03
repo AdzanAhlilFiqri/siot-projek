@@ -683,20 +683,153 @@ to { text-shadow: 0 0 20px var(--color-royal-blue); opacity: 1; }
 100% { background-position: 0 0; }
 }
 @media screen and (max-width: 768px) {
-.container-utama { padding: 10px; }
-.kepala-halaman { padding: 40px 15px; border-radius: 20px; }
-.main-title { font-size: 2.8rem; text-shadow: 2px 2px 0 #fff; }
-.sub-title { font-size: 0.9rem; flex-direction: column; }
-.sub-title::before, .sub-title::after { width: 30px; height: 2px; }
-.logo-sekolah { width: 140px; }
-.menu-navigasi { top: 10px; }
-.list-menu { flex-direction: column; padding: 20px; width: 90%; margin: 0 auto; gap: 10px; }
-.link-nav { display: block; text-align: center; width: 100%; background: #f0f8ff; border: 1px solid rgba(0,0,0,0.05); }
-.judul-artikel { font-size: 1.8rem; }
-.sensors-row { grid-template-columns: 1fr; }
-.nilai-utama { font-size: 3.5rem; }
-.area-canvas { height: 250px; }
-.footer-content { width: 100%; padding: 20px; border-radius: 20px; }
+    /* --- 1. SETTING CONTAINER BIAR RAPI DI HP --- */
+    .container-utama { padding: 15px; overflow-x: hidden; }
+    .kepala-halaman { padding: 30px 15px; border-radius: 25px; margin-bottom: 30px; }
+    .main-title { font-size: 3rem; }
+    .sub-title { font-size: 0.8rem; text-align: center; gap: 10px; flex-direction: column; }
+    .logo-sekolah { width: 100px; }
+    
+    /* Layout Kartu di HP jadi 1 Kolom */
+    .sensors-row { grid-template-columns: 1fr; gap: 20px; }
+    .kartu-sensor { padding: 25px; }
+    .nilai-utama { font-size: 3rem; }
+    .area-canvas { height: 300px; }
+    
+    /* --- 2. HAPUS NAVIGASI BAWAAN (RESET) --- */
+    .menu-navigasi {
+        margin: 0; padding: 0; 
+        background: transparent;
+        box-shadow: none; border: none; backdrop-filter: none;
+    }
+
+    /* --- 3. MAHKARYA TOMBOL TOGGLE (FLOATING ORB) --- */
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed; /* Melayang Tetap */
+        top: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%; /* Jadi Bulat */
+        z-index: 10001; /* Paling Depan */
+        cursor: pointer;
+        box-shadow: 0 8px 32px rgba(0, 78, 146, 0.25);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* Efek Glow pas ditekan/hover */
+    .menu-toggle:hover, .menu-toggle:focus {
+        background: var(--color-royal-blue);
+        border-color: var(--color-royal-blue);
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 0 25px rgba(0, 78, 146, 0.6);
+    }
+    
+    /* Garis Hamburger */
+    .hamburger-lines {
+        width: 25px;
+        height: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .line {
+        display: block;
+        height: 3px;
+        width: 100%;
+        border-radius: 10px;
+        background: var(--color-royal-blue);
+        transition: transform 0.4s ease-in-out, opacity 0.4s;
+    }
+
+    .menu-toggle:hover .line { background: #fff; } /* Garis jadi putih pas hover */
+
+    /* Animasi Perubahan Jadi X (Cross) */
+    .menu-toggle.is-active {
+        background: var(--color-alert); /* Tombol jadi merah */
+        border-color: var(--color-alert);
+        transform: rotate(180deg);
+    }
+    .menu-toggle.is-active .line { background: white; }
+    .menu-toggle.is-active .line1 { transform: translateY(8px) rotate(45deg); }
+    .menu-toggle.is-active .line2 { transform: scaleX(0); opacity: 0; }
+    .menu-toggle.is-active .line3 { transform: translateY(-9px) rotate(-45deg); }
+
+    /* --- 4. SIDEBAR MENU (LACI SAMPING) --- */
+    .list-menu {
+        position: fixed;
+        top: 0; right: 0; bottom: 0; /* Full height kanan */
+        width: 75%; /* Lebar Laci */
+        max-width: 300px;
+        background: rgba(255, 255, 255, 0.96);
+        border-left: 1px solid rgba(255, 255, 255, 0.3);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-top: 60px;
+        gap: 20px;
+        
+        /* Animasi Keluar Masuk */
+        transform: translateX(120%);
+        transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        z-index: 10000;
+        box-shadow: -10px 0 50px rgba(0,0,0,0.15);
+        backdrop-filter: blur(20px);
+    }
+    
+    .list-menu.active {
+        transform: translateX(0); /* Muncul */
+    }
+    
+    /* Link di dalem sidebar */
+    .link-nav {
+        width: 80%;
+        text-align: center;
+        background: transparent;
+        font-size: 1.1rem;
+        padding: 15px;
+        border: 2px solid transparent;
+        opacity: 0; /* Ilang dulu buat animasi staggered */
+        transform: translateX(30px);
+        transition: all 0.3s ease;
+    }
+    
+    /* Animasi Link Muncul Satu-satu */
+    .list-menu.active .link-nav {
+        opacity: 1;
+        transform: translateX(0);
+        transition: all 0.5s ease 0.2s; /* Delay dikit */
+    }
+    
+    /* Warna Link di Sidebar */
+    .link-nav:hover {
+        border-color: var(--color-royal-blue);
+        background: rgba(0, 78, 146, 0.05);
+        color: var(--color-royal-blue);
+        transform: scale(1.05);
+    }
+    
+    /* Mode Gelap Support buat Sidebar */
+    body.dark-mode .menu-toggle { 
+        background: rgba(15, 23, 42, 0.6); 
+        border-color: var(--color-cyan-light); 
+    }
+    body.dark-mode .menu-toggle:hover { background: var(--color-cyan-light); border-color: var(--color-cyan-light); }
+    body.dark-mode .menu-toggle .line { background: var(--color-cyan-light); }
+    body.dark-mode .menu-toggle:hover .line { background: #000; }
+    body.dark-mode .list-menu { background: rgba(15, 23, 42, 0.98); border-left-color: rgba(255,255,255,0.1); }
+    
+    /* Hilangkan footer team list di HP biar gak penuh */
+    .team-list { display: none; }
+    .footer-content { margin-bottom: 20px; }
 }
 @media screen and (min-width: 1400px) {
 .container-utama { max-width: 1500px; }
