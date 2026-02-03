@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap');
 :root {
 --color-royal-blue: #004e92;
+--color-abu-terang: #dadada;
 --color-cyan-light: #00c6ff;
 --color-emerald: #11998e;
 --color-leaf: #38ef7d;
@@ -224,7 +225,7 @@ display: inline-block;
 }
 .link-nav:hover {
 background: var(--color-royal-blue);
-color: white;
+color: var(--color-abu-terang);
 transform: translateY(-5px);
 box-shadow: 0 10px 20px rgba(0, 78, 146, 0.3);
 }
@@ -869,6 +870,8 @@ margin-bottom: 20px;
     font-family: var(--font-stack);
 }
 
+/* Mode Malam Set */
+
 body.dark-mode {
     --color-text-main: #e0e0e0;
     --color-text-sub: #b0b0b0;
@@ -918,6 +921,14 @@ body.dark-mode .baris-log {
 body.dark-mode .btn-mode {
     border-color: var(--color-gold);
     color: var(--color-gold);
+}
+
+body.dark-mode .link-nav {
+    color: var(--color-abu-terang);
+}
+
+body.dark-mode .waktu-area {
+    color: var(--color-abu-terang);
 }
 
 body.dark-mode .link-nav:hover {
