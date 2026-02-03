@@ -27,13 +27,23 @@
         </header>
 
         <nav id="navigasi-utama" class="menu-navigasi">
-            <ul class="list-menu">
-                <li class="item-menu"><a href="#edukasi-section" class="link-nav">PENGANTAR</a></li>
-                <li class="item-menu"><a href="#dashboard-area" class="link-nav">MONITORING</a></li>
-                <li class="item-menu"><a href="#tim-dev" class="link-nav">TIM PENGEMBANG</a></li>
-                <li class="item-menu"><button id="theme-btn" class="link-nav btn-mode">🌙 MODE MALAM</button></li>
-            </ul>
-        </nav>
+    <!-- Tombol Floating Toggle Keren -->
+    <button class="menu-toggle" id="mobile-menu" aria-label="Menu Utama">
+        <div class="hamburger-lines">
+            <span class="line line1"></span>
+            <span class="line line2"></span>
+            <span class="line line3"></span>
+        </div>
+    </button>
+
+    <ul class="list-menu">
+        <li class="item-menu"><a href="#edukasi-section" class="link-nav">PENGANTAR</a></li>
+        <li class="item-menu"><a href="#dashboard-area" class="link-nav">MONITORING</a></li>
+        <li class="item-menu"><a href="#tim-dev" class="link-nav">TIM PENGEMBANG</a></li>
+        <!-- Tombol Dark Mode Tetep Disini (nanti dimasukin via script) -->
+         <li class="item-menu"><button id="theme-btn" class="link-nav btn-mode">🌙 MODE MALAM</button></li>
+    </ul>
+</nav>
 
         <main id="konten-utama" class="isi-halaman">
             
