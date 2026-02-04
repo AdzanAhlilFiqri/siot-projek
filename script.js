@@ -11,7 +11,7 @@ const CONF_MQTT = {
         cleanSession: true,
         keepAliveInterval: 30,
         timeout: 3,
-        clientId: "WEB_SOFIA_" + Math.random().toString(16).substr(2, 8)
+        clientId: "SOFIA-ESP32" + Math.random().toString(16).substr(2, 8)
     },
     subs: "sofia/#"
 };
@@ -416,33 +416,37 @@ class MqttHandler {
 
 document.addEventListener('DOMContentLoaded', () => {
     Visualizer.initChart();
-    
+
+    /* ====== UPTIME ====== */
     setInterval(() => {
-        const now = Date.now();
-        const start = CoreState.startTime;
-        const diff = new Date(now - start);
-        const str = diff.toISOString().substr(11, 8);
-        DOMElems.sys.uptime.innerText = str;
+        const diff = new Date(Date.now() - CoreState.startTime);
+        DOMElems.sys.uptime.innerText = diff.toISOString().substr(11, 8);
     }, 1000);
-    
+
     new MqttHandler().init();
 
+    /* =========================
+       LIGHT / DARK MODE (FIX)
+    ========================== */
     const themeBtn = document.getElementById('theme-btn');
+
+    // DEFAULT MODE → DARK
+    document.body.classList.add('dark-mode');
+    themeBtn.innerText = "☀️ MODE SIANG";
+
     themeBtn.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
-        
+
         if (document.body.classList.contains('dark-mode')) {
             themeBtn.innerText = "☀️ MODE SIANG";
-            themeBtn.style.color = "yellow";
-            themeBtn.style.borderColor = "yellow";
         } else {
             themeBtn.innerText = "🌙 MODE MALAM";
-            themeBtn.style.color = "var(--color-royal-blue)";
-            themeBtn.style.borderColor = "var(--color-royal-blue)";
         }
     });
 
-    // LOGIKA SIDEBAR MOBILE
+    /* =========================
+       MOBILE SIDEBAR
+    ========================== */
     const menuToggle = document.getElementById('mobile-menu');
     const navList = document.querySelector('.list-menu');
 
@@ -451,8 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
             menuToggle.classList.toggle('is-active');
             navList.classList.toggle('active');
         });
-        
-        // Klik link otomatis tutup menu
+
         document.querySelectorAll('.link-nav').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('is-active');
