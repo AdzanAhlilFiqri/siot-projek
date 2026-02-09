@@ -55,7 +55,10 @@ const CoreState = {
     startTime: Date.now(),
     sensors: {
         temp: [], gas: []
-    }
+    },
+
+    isNightMode: false,
+    currentTime: "00:00:00"
 };
 
 let mainChartRef = null;
@@ -66,6 +69,19 @@ const GlobalUtils = {
     },
     rand: (min, max) => {
         return Math.random() * (max - min) + min;
+    },
+
+    getCurrentHour: () => {
+        return new Date().getHours();
+    },
+    getFormattedTime: () => {
+        const now = new Date();
+        return now.toLocaleTimeString('id-ID', { 
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
     }
 };
 
@@ -207,22 +223,51 @@ const DataProcessor = {
         DOMElems.cards.hum.val.innerText = parseFloat(msg).toFixed(0);
         Visualizer.setBar(DOMElems.cards.hum.bar, parseFloat(msg), 100);
     },
-    handleDist: (msg) => {
-        DOMElems.cards.dist.val.innerText = msg;
-        Visualizer.setBar(DOMElems.cards.dist.bar, parseInt(msg), 200);
-    },
     handleMotion: (msg) => {
         const el = DOMElems.cards.motion;
-        if(msg == '1' || msg === 'TERDETEKSI') {
-            el.val.innerText = "ADA GERAKAN";
-            el.val.style.color = "red";
-            el.ind.style.background = "red";
-            el.ind.style.boxShadow = "0 0 15px red";
+        const isNightMode = CoreState.isNightMode;
+        
+        // Mode malam: lebih sensitif (threshold lebih rendah)
+        if(isNightMode) {
+            if(msg == '1' || msg === 'TERDETEKSI' || parseInt(msg) > 30) {
+                el.val.innerText = "GERAKAN DETEKSI!";
+                el.val.style.color = "red";
+                el.ind.style.background = "red";
+                el.ind.style.boxShadow = "0 0 20px red";
+                LogSystem.add("Gerakan terdeteksi (Mode Sensitif Malam)", "WARN");
+            } else {
+                el.val.innerText = "AMAN";
+                el.val.style.color = "#ccc";
+                el.ind.style.background = "#333";
+                el.ind.style.boxShadow = "none";
+            }
         } else {
-            el.val.innerText = "SEPI";
-            el.val.style.color = "#ccc";
-            el.ind.style.background = "#333";
-            el.ind.style.boxShadow = "none";
+            // Mode siang: normal threshold
+            if(msg == '1' || msg === 'TERDETEKSI') {
+                el.val.innerText = "ADA GERAKAN";
+                el.val.style.color = "red";
+                el.ind.style.background = "red";
+                el.ind.style.boxShadow = "0 0 15px red";
+            } else {
+                el.val.innerText = "SEPI";
+                el.val.style.color = "#ccc";
+                el.ind.style.background = "#333";
+                el.ind.style.boxShadow = "none";
+            }
+        }
+    },
+    
+    handleDist: (msg) => {
+        const val = parseInt(msg);
+        DOMElems.cards.dist.val.innerText = msg;
+        
+        // Mode malam: lebih sensitif (threshold lebih rendah)
+        const maxDistance = CoreState.isNightMode ? 100 : 200;
+        Visualizer.setBar(DOMElems.cards.dist.bar, val, maxDistance);
+        
+        // Notifikasi jika objek terlalu dekat di malam hari
+        if(CoreState.isNightMode && val < 50) {
+            LogSystem.add(`Peringatan: Objek terdeteksi ${val}cm (Mode Sensitif)`, "WARN");
         }
     },
     handleFlame: (msg) => {
@@ -297,7 +342,52 @@ const DataProcessor = {
         }
     }
 };
-
+const TimeManager = {
+    updateClock: () => {
+        // Update waktu realtime
+        CoreState.currentTime = GlobalUtils.getFormattedTime();
+        const hour = GlobalUtils.getCurrentHour();
+        
+        // Cek apakah mode malam (18:00 - 06:00)
+        const wasNightMode = CoreState.isNightMode;
+        CoreState.isNightMode = (hour >= 21 || hour < 6);
+        
+        // Jika mode berubah, log perubahan
+        if (wasNightMode !== CoreState.isNightMode) {
+            const mode = CoreState.isNightMode ? "MALAM (SENSITIF)" : "SIANG (NORMAL)";
+            LogSystem.add(`Mode sensor: ${mode}`, 'INFO');
+            
+            // Update UI jika ada elemen untuk menampilkan mode
+            if (DOMElems.cards.motion && DOMElems.cards.motion.box) {
+                const modeBadge = document.createElement('div');
+                modeBadge.className = 'sensor-mode-badge';
+                modeBadge.textContent = CoreState.isNightMode ? "🔦 MODE MALAM (Sensitif)" : "☀️ MODE SIANG (Normal)";
+                modeBadge.style.cssText = `
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    font-size: 10px;
+                    background: ${CoreState.isNightMode ? '#333' : '#fbbf24'};
+                    color: white;
+                    padding: 2px 6px;
+                    border-radius: 10px;
+                `;
+                
+                // Hapus badge lama jika ada
+                const oldBadge = DOMElems.cards.motion.box.querySelector('.sensor-mode-badge');
+                if (oldBadge) oldBadge.remove();
+                
+                DOMElems.cards.motion.box.appendChild(modeBadge);
+            }
+        }
+        
+        return CoreState.isNightMode;
+    },
+    
+    getSensorMode: () => {
+        return CoreState.isNightMode ? "sensitif" : "normal";
+    }
+};
 class SimulationEngine {
     constructor() {
         this.timers = [];
@@ -417,10 +507,40 @@ class MqttHandler {
 document.addEventListener('DOMContentLoaded', () => {
     Visualizer.initChart();
 
-    /* ====== UPTIME ====== */
+    /* ====== UPTIME & REAL TIME CLOCK ====== */
+    const realTimeClock = document.createElement('div');
+    realTimeClock.id = 'real-time-clock';
+    realTimeClock.style.cssText = `
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        z-index: 1000;
+        font-size: 14px;
+    `;
+    document.body.appendChild(realTimeClock);
+    
     setInterval(() => {
+        // Update uptime
         const diff = new Date(Date.now() - CoreState.startTime);
         DOMElems.sys.uptime.innerText = diff.toISOString().substr(11, 8);
+        
+        // Update jam realtime
+        TimeManager.updateClock();
+        realTimeClock.textContent = CoreState.currentTime;
+        
+        // Tambahkan indikator mode malam
+        if (CoreState.isNightMode) {
+            realTimeClock.style.border = "2px solid #ff9900";
+            realTimeClock.style.boxShadow = "0 0 10px #ff9900";
+        } else {
+            realTimeClock.style.border = "none";
+            realTimeClock.style.boxShadow = "none";
+        }
     }, 1000);
 
     new MqttHandler().init();
