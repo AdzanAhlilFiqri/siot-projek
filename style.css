@@ -793,7 +793,7 @@ to { text-shadow: 0 0 20px var(--color-royal-blue); opacity: 1; }
     
     /* Link di dalem sidebar */
     .link-nav {
-        width: 80%;
+        width:  95%;
         text-align: center;
         background: transparent;
         font-size: 1.1rem;
